@@ -1,0 +1,19 @@
+AI/Library/
+AI/Temp/
+AI/Logs/
+AI/Build/
+AI/Builds/
+AI/UserSettings/
+
+# Unity generated files
+*.csproj
+*.unityproj
+*.sln
+*.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
