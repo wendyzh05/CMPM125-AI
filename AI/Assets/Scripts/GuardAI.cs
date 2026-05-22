@@ -12,6 +12,11 @@ public class GuardAI : MonoBehaviour
         Return
     }
 
+    public GameObject alertIcon;
+
+    private float lastSeenTime;
+    public float memoryTime = 2f;
+
     [Header("State")]
     public GuardState currentState = GuardState.Patrol;
 
@@ -69,19 +74,24 @@ public class GuardAI : MonoBehaviour
                 break;
 
             case GuardState.Chase:
-                Chase();
+            Chase();
 
-                if (distanceToPlayer <= catchRange)
-                {
-                    CatchPlayer();
-                }
-                else if (!CanSeePlayer() || distanceToPlayer > losePlayerRange)
-                {
-                    lastKnownPosition = player.position;
-                    returnPosition = transform.position;
-                    currentState = GuardState.Investigate;
-                }
-                break;
+            if (CanSeePlayer())
+            {
+                lastSeenTime = Time.time;
+            }
+
+            if (distanceToPlayer <= catchRange)
+            {
+                CatchPlayer();
+            }
+            else if (Time.time - lastSeenTime > memoryTime)
+            {
+                lastKnownPosition = player.position;
+                returnPosition = lastKnownPosition;
+                currentState = GuardState.Investigate;
+            }
+            break;
 
             case GuardState.Investigate:
                 Investigate();
@@ -221,6 +231,15 @@ public class GuardAI : MonoBehaviour
             case GuardState.Return:
                 rend.material.color = Color.blue;
                 break;
+        }
+
+        if (currentState == GuardState.Chase)
+        {
+            alertIcon.SetActive(true);
+        }
+        else
+        {
+            alertIcon.SetActive(false);
         }
     }
 
