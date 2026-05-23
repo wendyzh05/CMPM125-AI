@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 
 public class GuardAI : MonoBehaviour
 {
@@ -199,16 +198,19 @@ public class GuardAI : MonoBehaviour
         playerCaught = true;
         Debug.Log("Player caught!");
 
-        if (restartWhenCaught)
+        GameManager gameManager = FindObjectOfType<GameManager>();
+
+        if (gameManager != null)
         {
-            Invoke(nameof(RestartScene), restartDelay);
+            gameManager.RespawnPlayer();
         }
+
+        playerCaught = false;
+        currentState = GuardState.Patrol;
+        GoToNextPoint();
     }
 
-    void RestartScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+   
 
     void UpdateColor()
     {
